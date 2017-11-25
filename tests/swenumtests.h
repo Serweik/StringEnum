@@ -1,39 +1,56 @@
 #ifndef SWENUMTESTS_H
 #define SWENUMTESTS_H
 
+#define WITHOUT_ASSIGNMENT
 #include "src/swenum.h"
 #include "cassert"
 
-DECLARE_SW_ENUM (
+#ifdef WITHOUT_ASSIGNMENT
+SW_ENUM(
 	TestEnum,
 	ZERO,
 	ONE,
 	TWO,
 	THREE
 )
-
 int ARRAY_FOR_TESTS[4] = {0, 1, 2, 3};
+#else
+SW_ASSIGN_ENUM(
+	TestEnum,
+	ZERO = 100,
+	ONE,
+	TWO = 2,
+	THREE = -3
+)
+int ARRAY_FOR_TESTS[4] = {100, 101, 2, -3};
+#endif
 std::string STRING_ARRAY_FOR_TESTS[4] = {"ZERO", "ONE", "TWO", "THREE"};
 
+void swEnumBitsOperationsTest(int testEnum) {
+	std::cout << "swEnumBitsOperationsTest: " << std::endl;
+	assert((testEnum & TestEnum::TWO) == TestEnum::TWO);
+	std::cout << "AND TWO = " << (testEnum & TestEnum::TWO) << std::endl;
+}
+
 void swEnumIncrement(TestEnum& testEnum) {
-	std::cout << "swEnumIncrement: ";
-	for(int i = testEnum; i < testEnum.size(); ++i, ++ testEnum) {
-		assert(i == ARRAY_FOR_TESTS[i]);
+	std::cout << "swEnumIncrement: " << std::endl;
+	for(int i = testEnum.valueIndex(); i < testEnum.size(); ++i, ++ testEnum) {
+		assert(testEnum == ARRAY_FOR_TESTS[i]);
 		std::cout << testEnum << std::endl;
 	}
 }
 
 void swEnumDecrement(TestEnum& testEnum) {
 	std::cout << "swEnumDecrement:" << std::endl;
-	for(int i = testEnum; i >= 0; -- i, -- testEnum) {
-		assert(i == ARRAY_FOR_TESTS[i]);
+	for(int i = testEnum.valueIndex(); i >= 0; -- i, -- testEnum) {
+		assert(testEnum == ARRAY_FOR_TESTS[i]);
 		std::cout << testEnum << std::endl;
 	}
 }
 
 void swEnumSwitch(TestEnum& testEnum) {
 	std::cout << "swEnumSwitch:" << std::endl;
-	assert(testEnum == ARRAY_FOR_TESTS[testEnum]);
+	assert(testEnum == ARRAY_FOR_TESTS[testEnum.valueIndex()]);
 	switch (testEnum) {
 		case TestEnum::ZERO:
 			std::cout << "val ZERO = " << TestEnum::ZERO << " strVal = " << testEnum.stringValue() << std::endl;
@@ -53,7 +70,7 @@ void swEnumSwitch(TestEnum& testEnum) {
 void swEnumValCompare(TestEnum& testEnum) {
 	std::cout << "swEnumValCompare:" << std::endl;
 	std::cout << "val = " << testEnum << " equals val: ";
-	assert(testEnum == ARRAY_FOR_TESTS[testEnum]);
+	assert(testEnum == ARRAY_FOR_TESTS[testEnum.valueIndex()]);
 	if(testEnum == TestEnum::ZERO) {
 		std::cout << "ZERO" << std::endl;
 	}else if(testEnum == TestEnum::ONE) {
@@ -70,7 +87,7 @@ void swEnumValCompare(TestEnum& testEnum) {
 void swEnumStringCompare(TestEnum& testEnum) {
 	std::cout << "swEnumStringCompare:" << std::endl;
 	std::cout << "val = " << testEnum << " equals string: ";
-	assert(testEnum.stringValue() == STRING_ARRAY_FOR_TESTS[testEnum]);
+	assert(testEnum.stringValue() == STRING_ARRAY_FOR_TESTS[testEnum.valueIndex()]);
 	if(testEnum == "ZERO") {
 		std::cout << "ZERO" << std::endl;
 	}else if(testEnum == "ONE") {
@@ -112,6 +129,9 @@ void mainTest() {
 	swEnumSwitch(testEnum3);
 	swEnumIncrement(testEnum3);
 	swEnumStringCompare(testEnum3);
+
+	std::cout << std::endl;
+	swEnumBitsOperationsTest(TestEnum::TWO | testEnum2 | testEnum3);
 }
 
 #endif // SWENUMTESTS_H
