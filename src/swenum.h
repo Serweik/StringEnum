@@ -4,7 +4,6 @@
 #include "iosfwd"
 #include "string"
 
-
 template <typename EnumType>
 struct SwEnumDeleteAssign {
 	explicit constexpr SwEnumDeleteAssign(EnumType value): _value(value)	{}
@@ -113,9 +112,9 @@ struct SwEnumDeleteAssign {
 #define SW_ENUM_CREATE_VALUES(macrosName, ...)	SW_ENUM__CALL_MACROS(SW_ENUM_GLUT_ID, macrosName, SW_ENUM_COUNT(__VA_ARGS__))(__VA_ARGS__)
 
 /*
- *   Enum_type - name of class wrapper for the enum.
- *	 typeOfEnumValues - type of values in the enum.
- *	 typeOfIndex - type of index field in the class wrapper. Determines how many bytes in sizeof(Enum_type instance object).
+ *	Enum_type - name of class wrapper for the enum.
+ *	typeOfEnumValues - type of values in the enum.
+ *	typeOfIndex - type of index field in the class wrapper. Determines how many bytes in sizeof(Enum_type instance object).
  */
 #define SW_ENUM(Enum_type, typeOfEnumValues, typeOfIndex, ...)\
 	class Enum_type {\
