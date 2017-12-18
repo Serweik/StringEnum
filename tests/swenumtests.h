@@ -1,29 +1,17 @@
 #ifndef SWENUMTESTS_H
 #define SWENUMTESTS_H
 
-#define WITHOUT_ASSIGNMENT
 #include "src/swenum.h"
 #include "cassert"
 
-#ifdef WITHOUT_ASSIGNMENT
 SW_ENUM(
-	TestEnum,
-	ZERO,
-	ONE,
-	TWO,
-	THREE
-)
-int ARRAY_FOR_TESTS[4] = {0, 1, 2, 3};
-#else
-SW_ASSIGN_ENUM(
-	TestEnum,
+	TestEnum, signed char, char,
 	ZERO = 100,
 	ONE,
 	TWO = 2,
 	THREE = -3
 )
 int ARRAY_FOR_TESTS[4] = {100, 101, 2, -3};
-#endif
 std::string STRING_ARRAY_FOR_TESTS[4] = {"ZERO", "ONE", "TWO", "THREE"};
 
 void swEnumBitsOperationsTest(int testEnum) {
@@ -132,6 +120,8 @@ void mainTest() {
 
 	std::cout << std::endl;
 	swEnumBitsOperationsTest(TestEnum::TWO | testEnum2 | testEnum3);
+
+	std::cout << "sizeof(testEnum3) = " << sizeof(testEnum3) << std::endl;
 }
 
 #endif // SWENUMTESTS_H
